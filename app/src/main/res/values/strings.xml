@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">gioiovashvili</string>
+    <string name="welcome_text">Log in to the app to see delicious recipes</string>
+    <string name="yumrecipe">YumRecipe 🍳</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="log_in">Log in</string>
+</resources>
