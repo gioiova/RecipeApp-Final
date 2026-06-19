@@ -30,10 +30,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"https://3effc900-ae7f-4923-a53d-9f72f300bd74.mock.pstmn.io/\"")
+            buildConfigField("String", "BASE_URL", "\"https://mocki.io/v1/\"")
         }
         getByName("debug") {
-            buildConfigField("String", "BASE_URL", "\"https://3effc900-ae7f-4923-a53d-9f72f300bd74.mock.pstmn.io/\"")
+            buildConfigField("String", "BASE_URL", "\"https://mocki.io/v1/\"")
         }
     }
     compileOptions {

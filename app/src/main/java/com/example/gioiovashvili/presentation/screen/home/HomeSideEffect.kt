@@ -1,4 +1,5 @@
 package com.example.gioiovashvili.presentation.screen.home
 
-class HomeSideEffect {
+sealed interface HomeSideEffect {
+    data class ShowToast(val message: String) : HomeSideEffect
 }
