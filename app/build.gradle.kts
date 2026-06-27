@@ -54,52 +54,42 @@ android {
     }
 }
 
+
 dependencies {
-    dependencies {
-        // Core & Lifecycle
-        implementation(libs.androidx.core.ktx)
-        implementation(libs.androidx.lifecycle.runtime.ktx)
-        implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.tooling.preview)
 
-        // Jetpack Compose
-        implementation(platform(libs.androidx.compose.bom))
-        implementation(libs.androidx.ui)
-        implementation(libs.androidx.ui.graphics)
-        implementation(libs.androidx.material3)
-        implementation(libs.androidx.ui.tooling.preview)
-        debugImplementation(libs.androidx.ui.tooling)
-        implementation(libs.androidx.navigation.compose)
+    implementation("androidx.room:room-runtime:2.7.1")
+    implementation("androidx.room:room-ktx:2.7.1")
+    ksp("androidx.room:room-compiler:2.7.1")
 
-        // Networking (Retrofit, OkHttp)
-        implementation(libs.retrofit2.kotlinx.serialization.converter)
-        implementation(libs.logging.interceptor)
-        implementation(libs.kotlinx.serialization.json)
-
-        // Dependency Injection (Hilt)
-        implementation(libs.hilt.android)
-        ksp(libs.hilt.android.compiler)
-        implementation(libs.androidx.hilt.navigation.compose)
-
-        // Image Loading (Coil)
-        implementation(libs.coil)
-        implementation(libs.coil.svg)
-        implementation(libs.coil.compose)
-
-        // DataStore
-        implementation(libs.androidx.datastore.preferences)
-
-        // Testing
-        testImplementation(libs.junit)
-        androidTestImplementation(libs.androidx.junit)
-        androidTestImplementation(libs.androidx.espresso.core)
-        androidTestImplementation(platform(libs.androidx.compose.bom))
-        androidTestImplementation(libs.androidx.ui.test.junit4)
-        debugImplementation(libs.androidx.ui.test.manifest)
-
-        testImplementation(libs.junit)
-        testImplementation(libs.mockk)
-        testImplementation(libs.kotlinx.coroutines.test)
-        testImplementation(libs.turbine)
-        testImplementation(libs.androidx.core.testing)
-    }
+    debugImplementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.logging.interceptor)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.coil)
+    implementation(libs.coil.svg)
+    implementation(libs.coil.compose)
+    ksp(libs.room.compiler)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.androidx.core.testing)
 }
