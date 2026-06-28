@@ -18,7 +18,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.gioiovashvili.domain.model.Recipe
 import com.example.gioiovashvili.presentation.extension.CollectSideEffects
-
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
@@ -34,40 +41,80 @@ fun HomeScreen(
         }
     }
 
-    HomeContent(state = state)
+    HomeContent(
+        state = state,
+        onSearchQueryChange = { query -> viewModel.onSearchQueryChanged(query) }
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeContent(state: HomeState) {
+private fun HomeContent(
+    state: HomeState,
+    onSearchQueryChange: (String) -> Unit
+) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-
-        if (state.isLoading) {
+        if (state.isLoading && state.recipes.isEmpty()) {
             CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-        }
-
-        else if (state.error != null) {
+        } else if (state.error != null && state.recipes.isEmpty()) {
             Text(
                 text = state.error,
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodyLarge
             )
-        }
-
-        else {
+        } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+
+                item {
+                    SearchBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        query = state.searchQuery,
+                        onQueryChange = onSearchQueryChange,
+                        onSearch = { },
+                        active = false,
+                        onActiveChange = { },
+                        placeholder = { Text("Search recipes...") },
+                        leadingIcon = {
+                            Icon(Icons.Default.Search, contentDescription = "Search Icon")
+                        },
+                        trailingIcon = {
+                            if (state.searchQuery.isNotEmpty()) {
+                                IconButton(onClick = { onSearchQueryChange("") }) {
+                                    Icon(Icons.Default.Clear, contentDescription = "Clear Icon")
+                                }
+                            }
+                        }
+                    ) {}
+                }
+
                 item {
                     Text(
-                        text = "Popular Recipes 🍲",
+                        text = if (state.searchQuery.isEmpty()) "Popular Recipes 🍲" else "Search Results 🔍",
                         style = MaterialTheme.typography.headlineMedium,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
+                }
+
+                if (state.recipes.isEmpty() && state.searchQuery.isNotEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No recipes found 😕",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
                 }
 
                 items(state.recipes, key = { it.id }) { recipe ->
@@ -85,7 +132,6 @@ private fun RecipeItem(recipe: Recipe) {
         shape = RoundedCornerShape(12.dp)
     ) {
         Column {
-            // რეცეპტის სურათი
             AsyncImage(
                 model = recipe.imageUrl,
                 contentDescription = recipe.title,
@@ -96,7 +142,6 @@ private fun RecipeItem(recipe: Recipe) {
                 contentScale = ContentScale.Crop
             )
 
-            // ინფორმაცია
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = recipe.title,
@@ -114,7 +159,6 @@ private fun RecipeItem(recipe: Recipe) {
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // პატარა თეგები (დრო და სირთულე)
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {

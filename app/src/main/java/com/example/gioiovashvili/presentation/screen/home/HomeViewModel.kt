@@ -2,6 +2,7 @@ package com.example.gioiovashvili.presentation.screen.home
 
 import androidx.lifecycle.viewModelScope
 import com.example.gioiovashvili.domain.common.Resource
+import com.example.gioiovashvili.domain.model.Recipe
 import com.example.gioiovashvili.domain.usecase.GetRecipesUseCase
 import com.example.gioiovashvili.presentation.common.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getRecipesUseCase: GetRecipesUseCase
 ) : BaseViewModel<HomeState, HomeSideEffect>(HomeState()) {
+    private var allRecipes: List<Recipe> = emptyList()
 
     init {
         getRecipes()
@@ -30,9 +32,12 @@ class HomeViewModel @Inject constructor(
                         }
                     }
                     is Resource.Success -> {
+                        val data = resource.data ?: emptyList()
+                        allRecipes = data
+
                         updateState {
                             it.copy(
-                                recipes = resource.data,
+                                recipes = filterRecipes(data, it.searchQuery),
                                 isLoading = false,
                                 error = null
                             )
@@ -45,10 +50,26 @@ class HomeViewModel @Inject constructor(
                                 error = resource.message
                             )
                         }
-                        emitSideEffect(HomeSideEffect.ShowToast(resource.message))
+                        emitSideEffect(HomeSideEffect.ShowToast(resource.message ?: "Unknown Error"))
                     }
                 }
             }
+        }
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        updateState {
+            it.copy(
+                searchQuery = query,
+                recipes = filterRecipes(allRecipes, query)
+            )
+        }
+    }
+    private fun filterRecipes(recipes: List<Recipe>, query: String): List<Recipe> {
+        if (query.isBlank()) return recipes
+        return recipes.filter { recipe ->
+            recipe.title.contains(query, ignoreCase = true) ||
+                    recipe.description.contains(query, ignoreCase = true)
         }
     }
 }
