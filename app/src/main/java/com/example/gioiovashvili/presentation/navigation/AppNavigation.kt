@@ -8,6 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.gioiovashvili.presentation.screen.about.AboutScreen
+import com.example.gioiovashvili.presentation.screen.addrecipe.AddRecipeScreen
+import com.example.gioiovashvili.presentation.screen.details.RecipeDetailsScreen
 import com.example.gioiovashvili.presentation.screen.home.HomeScreen
 import com.example.gioiovashvili.presentation.screen.login.LoginScreen
 import kotlinx.serialization.Serializable
@@ -36,7 +39,34 @@ fun AppNavigation(
         }
 
         composable<HomeRoute> {
-            HomeScreen()
+            HomeScreen(
+                onNavigateToLogin = {
+                    navController.navigate(LoginRoute) {
+                        popUpTo<HomeRoute> { inclusive = true }
+                    }
+                },
+                onNavigateToAbout = {
+                    navController.navigate(AboutRoute)
+                },
+                onNavigateToAddRecipe = {
+                    navController.navigate(AddRecipeRoute)
+                },
+                onNavigateToDetails = { recipeId ->
+                    navController.navigate(RecipeDetailsRoute(recipeId))
+                }
+            )
+        }
+
+        composable<AboutRoute> {
+            AboutScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable<AddRecipeRoute> {
+            AddRecipeScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable<RecipeDetailsRoute> {
+            RecipeDetailsScreen(onNavigateBack = { navController.popBackStack() })
         }
     }
 }
@@ -46,3 +76,12 @@ data object LoginRoute
 
 @Serializable
 data object HomeRoute
+
+@Serializable
+data object AboutRoute
+
+@Serializable
+data object AddRecipeRoute
+
+@Serializable
+data class RecipeDetailsRoute(val recipeId: String)

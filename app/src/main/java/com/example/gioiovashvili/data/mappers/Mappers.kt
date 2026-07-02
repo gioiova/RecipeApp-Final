@@ -32,3 +32,21 @@ fun RecipeEntity.toDomain(): Recipe {
         instructions = this.instructionsRaw.split("||").filter { it.isNotBlank() }
     )
 }
+
+fun Recipe.toEntity(): RecipeEntity {
+    val prepTime = totalTimeMinutes / 2
+    val cookTime = totalTimeMinutes - prepTime
+
+    return RecipeEntity(
+        id = id,
+        title = title,
+        description = description,
+        imageUrl = imageUrl,
+        prepTimeMinutes = prepTime,
+        cookTimeMinutes = cookTime,
+        difficulty = difficulty,
+        rating = rating,
+        ingredientsRaw = ingredients.joinToString("||"),
+        instructionsRaw = instructions.joinToString("||")
+    )
+}

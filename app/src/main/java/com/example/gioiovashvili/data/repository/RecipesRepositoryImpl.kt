@@ -3,6 +3,7 @@ package com.example.gioiovashvili.data.repository
 import com.example.gioiovashvili.data.apiService.GetRecipesApiService
 import com.example.gioiovashvili.data.common.HandleResponse
 import com.example.gioiovashvili.data.database.dao.RecipeDao
+import com.example.gioiovashvili.data.local.DefaultRecipes
 import com.example.gioiovashvili.data.mappers.toDomain
 import com.example.gioiovashvili.data.mappers.toEntity
 import com.example.gioiovashvili.domain.common.Resource
@@ -22,6 +23,10 @@ class RecipesRepositoryImpl @Inject constructor(
 
     override suspend fun getRecipes(): Flow<Resource<List<Recipe>>> = flow {
         emit(Resource.Loading(loading = true))
+
+        if (recipeDao.getRecipeCount() == 0) {
+            recipeDao.insertRecipes(DefaultRecipes.recipes.map { it.toEntity() })
+        }
 
         handleResponse.safeApiCall { apiService.getFields() }.collect { resource ->
             when (resource) {
@@ -46,4 +51,13 @@ class RecipesRepositoryImpl @Inject constructor(
 
         emitAll(localRecipesFlow)
     }
+
+    override suspend fun addRecipe(recipe: Recipe) {
+        recipeDao.insertRecipe(recipe.toEntity())
+    }
+
+    override suspend fun getRecipeById(id: String): Recipe? {
+        return recipeDao.getRecipeById(id)?.toDomain()
+    }
 }
+

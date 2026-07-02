@@ -65,6 +65,18 @@ class HomeViewModel @Inject constructor(
             )
         }
     }
+
+    fun onAboutClick() {
+        emitSideEffect(HomeSideEffect.NavigateToAbout)
+    }
+
+    fun onAddRecipeClick() {
+        emitSideEffect(HomeSideEffect.NavigateToAddRecipe)
+    }
+
+    fun onLogoutClick() {
+        emitSideEffect(HomeSideEffect.NavigateToLogin)
+    }
     private fun filterRecipes(recipes: List<Recipe>, query: String): List<Recipe> {
         if (query.isBlank()) return recipes
         return recipes.filter { recipe ->

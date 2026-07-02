@@ -11,6 +11,16 @@ import kotlinx.coroutines.flow.Flow
 interface RecipeDao {
     @Query("SELECT * FROM recipes")
     fun getRecipes(): Flow<List<RecipeEntity>>
+
+    @Query("SELECT COUNT(*) FROM recipes")
+    suspend fun getRecipeCount(): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecipes(recipes: List<RecipeEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRecipe(recipe: RecipeEntity)
+
+    @Query("SELECT * FROM recipes WHERE id = :id")
+    suspend fun getRecipeById(id: String): RecipeEntity?
 }
