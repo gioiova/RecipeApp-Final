@@ -10,7 +10,7 @@ object DefaultRecipes {
             description = "A timeless Italian pizza with fresh mozzarella, basil, and rich tomato sauce on a crispy crust.",
             imageUrl = "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800",
             totalTimeMinutes = 45,
-            difficulty = "Medium",
+            difficulty = "Hard",
             rating = 4.8,
             ingredients = listOf(
                 "Pizza dough",

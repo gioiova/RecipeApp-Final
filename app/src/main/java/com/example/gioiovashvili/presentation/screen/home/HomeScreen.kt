@@ -4,9 +4,11 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,11 +43,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.compose.ui.res.painterResource
 import coil.compose.AsyncImage
 import com.example.gioiovashvili.R
 import com.example.gioiovashvili.domain.model.Recipe
@@ -154,7 +157,7 @@ private fun HomeContent(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 0.dp, bottom = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
@@ -175,7 +178,8 @@ private fun HomeContent(
                                         Icon(Icons.Default.Clear, contentDescription = "Clear Icon")
                                     }
                                 }
-                            }
+                            },
+                            windowInsets = WindowInsets(0, 0, 0, 0)
                         ) {}
                     }
 
@@ -256,20 +260,28 @@ private fun RecipeItem(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     SuggestionChip(
                         onClick = { },
-                        label = { Text("⏱️ ${recipe.totalTimeMinutes} mins") }
+                        label = { Text("⏱️ ${recipe.totalTimeMinutes} mins", maxLines = 1) }
                     )
                     SuggestionChip(
                         onClick = { },
-                        label = { Text("🔥 ${recipe.difficulty}") }
+                        label = { Text("🔥 ${recipe.difficulty}", maxLines = 1) }
                     )
                     SuggestionChip(
                         onClick = { },
-                        label = { Text("⭐ ${recipe.rating}") }
+                        label = {
+                            Text(
+                                text = "⭐ ${recipe.rating}",
+                                maxLines = 1,
+                                softWrap = false,
+                                overflow = TextOverflow.Visible
+                            )
+                        }
                     )
                 }
             }
